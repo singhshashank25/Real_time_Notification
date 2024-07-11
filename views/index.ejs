@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Example</title>
+</head>
+<body>
+  <h1>Real-Time Notifications</h1>
+  <div id="notifications"></div>
+  <h1>userId = <%=userId%></h1>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+  <script>
+    const userId = '<%= userId %>'
+    const socket = io('/');
+    socket.emit('registerUser', userId);
+   
+    
+    socket.on('notification', (data) => {
+      console.log(data)
+      const notificationsDiv = document.getElementById('notifications');
+      const notificationElement = document.createElement('div');
+    //   notificationElement.setAttribute('data-id', data.id);
+
+    //   const titleElement = document.createElement('h2');
+    //   titleElement.textContent = data.title;
+
+      const bodyElement = document.createElement('p');
+      bodyElement.textContent = data.message;
+
+    //   const timestampElement = document.createElement('small');
+    //   timestampElement.textContent = new Date(data.timestamp).toLocaleString();
+
+    //   notificationElement.appendChild(titleElement);
+      notificationElement.appendChild(bodyElement);
+    //   notificationElement.appendChild(timestampElement);
+
+      notificationElement.onclick = () => markAsRead(data._id);
+      notificationsDiv.appendChild(notificationElement);
+    });
+
+    socket.on('notificationRead', (notificationId) => {
+      const notificationElement = document.querySelector(`div[data-id="${notificationId}"]`);
+      if (notificationElement) {
+        notificationElement.style.textDecoration = 'line-through';
+      }
+    });
+
+    const markAsRead = (notificationId) => {
+      socket.emit('markAsRead', notificationId);
+    };
+    
+  </script>
+</body>
+</html>
+
+
+
