@@ -18,6 +18,7 @@ const {User} = require('./models/user');
 const {notification} = require("./models/notification");
 
 app.set('view engine', 'ejs');
+const setupSwagger = require('./swagger');
 
 
 const dburl = process.env.MongoURI;
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(bodyParser.json());
 
+setupSwagger(app);
 
 app.get("/:id",(req,res)=>{
   let token = req.params.id;
