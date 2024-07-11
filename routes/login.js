@@ -14,7 +14,7 @@ router.post("/",async (req,res)=>{
 
     if(!user)return res.status(400).json({msg:"User Not Found"});
     const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if(!validPassword)res.status(400).json({msg:"wrong password"});
+    if(!validPassword)return res.status(400).json({msg:"wrong password"});
 
     const token = await user.generateAuthToken();
 

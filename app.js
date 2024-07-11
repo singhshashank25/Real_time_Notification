@@ -33,21 +33,20 @@ app.use(bodyParser.json());
 
 setupSwagger(app);
 
-app.get("/:id",(req,res)=>{
+app.get("/:id",(req,res)=>{ // just for making user connect to socket.
   let token = req.params.id;
 	if (!token)
 		return res
 			.status(400)
-			// .send({ message: "Access denied, no token provided." })
 			.json({message: "Access denied, no token provided."})
 
 	jwt.verify(token, process.env.JWTSECRET, (err, validToken) => {
 		if (err) {
 			return res.status(400).send({ message: "invalid token" });
 		} else {
-
 			return res.render('index',({
-        userId:validToken._id
+        userId:validToken._id,
+        username:validToken.username
       }));
 		}
 	});
